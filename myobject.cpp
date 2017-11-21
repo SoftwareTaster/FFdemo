@@ -9,7 +9,7 @@ MYOBJECT::MYOBJECT()
 
 MYOBJECT::MYOBJECT(const QString &objpath)
 {
-    QFile f("D:\\out.txt");
+    QFile f("F:\\experiment\\qt\\Projects\\ComputerAnimatioonTwo\\ObjParseRight.txt");
     f.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream txtOutput(&f);
     QFile file(objpath);

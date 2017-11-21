@@ -34,7 +34,11 @@ SOURCES += \
     myface.cpp \
     myobject.cpp \
     ffd.cpp \
-    controlwidget.cpp
+    controlwidget.cpp \
+    OPenGLDemo/Project/OpenGLScence_qt/RoamingScenceManager.cpp \
+    OPenGLDemo/src/MathAPIKernel_Qt/Matrix4D.cpp \
+    OPenGLDemo/src/MathAPIKernel_Qt/Position3D.cpp \
+    OPenGLDemo/src/MathAPIKernel_Qt/Vector3D.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +48,11 @@ HEADERS += \
     myface.h \
     myobject.h \
     ffd.h \
-    controlwidget.h
+    controlwidget.h \
+    OPenGLDemo/Project/OpenGLScence_qt/RoamingScenceManager.h \
+    OPenGLDemo/include/MathAPIKernel/Matrix4D.h \
+    OPenGLDemo/include/MathAPIKernel/Position3D.h \
+    OPenGLDemo/include/MathAPIKernel/Vector3D.h
 
 FORMS += \
         mainwindow.ui
@@ -52,3 +60,6 @@ FORMS += \
 win32:LIBS += -lOpengl32 \
                 -lglu32 \
                 -lglut
+
+win32:LIBS+= -L$$PWD/OPenGLDemo/lib/lib_qt/ -lglew32
+win32:LIBS+= -L$$PWD/OPenGLDemo/lib/lib_qt/ -lglut32

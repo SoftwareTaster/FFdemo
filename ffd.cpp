@@ -28,7 +28,7 @@ FFD::FFD(MYPOINT ltp, MYPOINT rbp)
 
 int FFD::calculateFactorial(int i)
 {
-    if (i == 1) {
+    if (i == 0) {
         return 1;
     }
     else {
@@ -51,7 +51,7 @@ double FFD::calculateBernstein(int i, int n, double u)
 MYPOINT FFD::calculateBezier(MYPOINT np)
 {
     double resx = 0; double resy = 0; double resz = 0;
-    int u = np.px; int v = np.py; int w = np.pz;
+    double u = np.px; double v = np.py; double w = np.pz;
     for (int i = 0; i <= 3; i++) {
         for (int j = 0; j <= 3; j++) {
             for (int k = 0; k <= 3; k++) {

@@ -17,8 +17,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    //void mousePressEvent(QMouseEvent *e);
+    //void mouseMoveEvent(QMouseEvent *e);
+    //void wheelEvent(QWheelEvent *e);
+
     ShowGLWidget* swidget;
     ControlWidget* cwidget;
+
+    void toMoveControlPoint();
+    void toShowControlPoint();
 
 private:
     Ui::MainWindow *ui;

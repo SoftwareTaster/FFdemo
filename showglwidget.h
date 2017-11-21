@@ -9,6 +9,7 @@
 #include "myobject.h"
 #include "ffd.h"
 
+class MainWindow;
 class ShowGLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -16,6 +17,9 @@ class ShowGLWidget : public QGLWidget
 public:
     ShowGLWidget(QWidget* parent = 0);
     ~ShowGLWidget();
+
+    MYOBJECT* obj;
+    MainWindow* ptr;
 
 protected:
     void initializeGL();

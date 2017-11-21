@@ -1,10 +1,13 @@
 #include "controlwidget.h"
+#include <QDebug>
 
 ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
 {
     for (int i = 0; i < 64; i++) {
+        buttonClicked[i] = false;
         QString str = QString::number(i, 10);
         controlbutton[i] = new QPushButton(str, this);
+        connect(controlbutton[i], &QPushButton::clicked, this, &ControlWidget::clickButton);
     }
 
     QHBoxLayout* layout0 = new QHBoxLayout;
@@ -22,6 +25,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
         layout1->addLayout(layout1_3);
         layout1->addLayout(layout1_4);
     layout0->addLayout(layout1);
+    layout0->addSpacing(10);
         QVBoxLayout* layout2 = new QVBoxLayout;
             QHBoxLayout* layout2_1 = new QHBoxLayout;
             addButton(layout2_1, 4);
@@ -36,6 +40,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
         layout2->addLayout(layout2_3);
         layout2->addLayout(layout2_4);
     layout0->addLayout(layout2);
+    layout0->addSpacing(10);
         QVBoxLayout* layout3 = new QVBoxLayout;
             QHBoxLayout* layout3_1 = new QHBoxLayout;
             addButton(layout3_1, 8);
@@ -50,6 +55,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
         layout3->addLayout(layout3_3);
         layout3->addLayout(layout3_4);
     layout0->addLayout(layout3);
+    layout0->addSpacing(10);
         QVBoxLayout* layout4 = new QVBoxLayout;
             QHBoxLayout* layout4_1 = new QHBoxLayout;
             addButton(layout4_1, 12);
@@ -68,6 +74,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
     QHBoxLayout* layoutxyz = new QHBoxLayout;
 
     sliderx = new QSlider(this);
+    sliderx->setObjectName("xSlider");
     sliderx->setRange(-10, 10);
     sliderx->setValue(0);
     sliderx->setOrientation(Qt::Horizontal);
@@ -77,6 +84,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
     layoutxyz->addWidget(sliderx);
 
     slidery = new QSlider(this);
+    slidery->setObjectName("ySlider");
     slidery->setRange(-10, 10);
     slidery->setValue(0);
     slidery->setOrientation(Qt::Horizontal);
@@ -86,6 +94,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
     layoutxyz->addWidget(slidery);
 
     sliderz = new QSlider(this);
+    sliderz->setObjectName("zSlider");
     sliderz->setRange(-10, 10);
     sliderz->setValue(0);
     sliderz->setOrientation(Qt::Horizontal);
@@ -96,6 +105,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
 
     QVBoxLayout* superlayout = new QVBoxLayout;
     superlayout->addLayout(layout0);
+    superlayout->addSpacing(20);
     superlayout->addLayout(layoutxyz);
     setLayout(superlayout);
 }
@@ -105,5 +115,18 @@ void ControlWidget::addButton(QHBoxLayout *l, int n)
     n *= 4;
     for (int i = 0; i < 4; i++) {
         l->addWidget(controlbutton[n + i]);
+    }
+}
+
+void ControlWidget::clickButton()
+{
+    QPushButton* tmp = (QPushButton*)sender();
+    int buttonNumber = tmp->text().toInt();
+    buttonClicked[buttonNumber] = !buttonClicked[buttonNumber];
+    if (buttonClicked[buttonNumber]) {
+        controlbutton[buttonNumber]->setFlat(true);
+    }
+    else {
+        controlbutton[buttonNumber]->setFlat(false);
     }
 }

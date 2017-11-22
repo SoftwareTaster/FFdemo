@@ -13,6 +13,7 @@ RoamingScenceManager::RoamingScenceManager()
     Mouse=new Position3D();
 
     NewEye=new Vector3D(100,0,0);
+    NewEye=new Vector3D(0,-100,0);
     NewUp=new Vector3D(0,0,1);
     NewView=new Vector3D(0,0,0);
 
@@ -24,7 +25,9 @@ RoamingScenceManager::RoamingScenceManager()
     AuxX->normalize();
 
     TempTranslateVec=new Vector3D(0,0,0);
+    TempTranslateVec=new Vector3D(0,-55,0);
     TempscaleFactor=1;
+    TempscaleFactor=2;
 }
 
 RoamingScenceManager::~RoamingScenceManager()
@@ -67,9 +70,9 @@ void RoamingScenceManager::render()
     gluLookAt(NewEye->X(),NewEye->Y(),NewEye->Z(),
               NewView->X(),NewView->Y(),NewView->Z(),
               NewUp->X(),NewUp->Y(),NewUp->Z());
-    glColor3f(1,0,0);
-    glutWireCube(250);
-    glCallList(ID_COORDINATY);
+    //glColor3f(1,0,0);
+    //glutWireCube(250);
+    //glCallList(ID_COORDINATY);
 }
 
 void RoamingScenceManager::executeRotateOperation(int x, int y)

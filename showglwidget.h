@@ -8,6 +8,7 @@
 #include "myface.h"
 #include "myobject.h"
 #include "ffd.h"
+#include "OPenGLDemo/Project/OpenGLScence_qt/RoamingScenceManager.h"
 
 class MainWindow;
 class ShowGLWidget : public QGLWidget
@@ -18,19 +19,22 @@ public:
     ShowGLWidget(QWidget* parent = 0);
     ~ShowGLWidget();
 
+    QString filename;
+    QString file_name;
     MYOBJECT* obj;
     MainWindow* ptr;
+
+    RoamingScenceManager* manager;
 
 protected:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
-    void keyPressEvent(QKeyEvent *event); // handle press key event
+
+    bool counter(int i, int j, int k);
+    void DrawFrame();
 
 private:
-    bool fullscreen;
-    GLfloat m_rtri;                                 //控制三角形的角度
-    GLfloat m_rquad;                                //控制四边形的角度
 };
 
 #endif // SHOWGLWIDGET_H

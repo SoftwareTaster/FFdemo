@@ -1,15 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDir>
 #include <QDebug>
 #include <QFile>
+#include <QString>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <OPenGLDemo/include/MathAPIKernel/Vector3D.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    fullscreen = false;
 
     QWidget* widget = new QWidget(this);
     setCentralWidget(widget);
@@ -28,6 +34,13 @@ MainWindow::MainWindow(QWidget *parent) :
     for (int i = 0; i < 64; i++) {
         connect(cwidget->controlbutton[i], &QPushButton::clicked, this, &MainWindow::toShowControlPoint);
     }
+
+    msgLabel = new QLabel;
+    msgLabel->setMinimumSize(msgLabel->sizeHint());
+    msgLabel->setAlignment(Qt::AlignHCenter);
+    statusBar()->addWidget(msgLabel);
+    statusBar()->setStyleSheet(QString("QStatusBar::item{border: 0px}"));
+    messageINstatusbar();
 }
 
 MainWindow::~MainWindow()
@@ -35,11 +48,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::messageINstatusbar()
+{
+    QString tmpstr = "";
+    tmpstr+=QString("T:%1,%2,%3\t\t").arg(swidget->manager->TempTranslateVec->X())
+            .arg(swidget->manager->TempTranslateVec->Y())
+            .arg(swidget->manager->TempTranslateVec->Z());
+    tmpstr+=QString("S:%1\t\t").arg(swidget->manager->TempscaleFactor);
+    tmpstr+=QString("Ea:%1,%2,%3\tEb:%4,%5,%6")
+            .arg(swidget->manager->NewEye->X()).arg(swidget->manager->NewEye->Y()).arg(swidget->manager->NewEye->Z())
+            .arg(swidget->manager->NewUp->X()).arg(swidget->manager->NewUp->Y()).arg(swidget->manager->NewUp->Z());
+    msgLabel->setText(tmpstr);
+}
+
 void MainWindow::toMoveControlPoint()
 {
-    QFile f("F:\\experiment\\qt\\Projects\\ComputerAnimatioonTwo\\ObjCalculateRight.txt");
-    f.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream txtOutput(&f);
+    //QFile f("F:\\experiment\\qt\\Projects\\ComputerAnimatioonTwo\\ObjCalculateRight.txt");
+    //f.open(QIODevice::WriteOnly | QIODevice::Text);
+    //QTextStream txtOutput(&f);
+
+    if (!swidget->obj) return;
 
     QString sliderName = sender()->objectName();
     for(int i = 0; i < 64; i++) {
@@ -64,7 +92,7 @@ void MainWindow::toMoveControlPoint()
     }
     for (int i = 0; i < swidget->obj->points.size(); i++) {
         swidget->obj->points[i] = swidget->obj->ffd->calculateBezier(swidget->obj->normalizedpoints[i]);
-        txtOutput << swidget->obj->points[i].px << swidget->obj->points[i].py << swidget->obj->points[i].pz << endl;
+        //txtOutput << swidget->obj->points[i].px << swidget->obj->points[i].py << swidget->obj->points[i].pz << endl;
     }
 
     cwidget->sliderx->setValue(0);
@@ -72,7 +100,7 @@ void MainWindow::toMoveControlPoint()
     cwidget->sliderz->setValue(0);
     swidget->updateGL();
 
-    f.close();
+    //f.close();
 }
 
 void MainWindow::toShowControlPoint()
@@ -80,35 +108,96 @@ void MainWindow::toShowControlPoint()
     swidget->updateGL();
 }
 
-/*void MainWindow::mousePressEvent(QMouseEvent *e)
+void MainWindow::mousePressEvent(QMouseEvent *e)
 {
-    mwidget->manager->getInitPos(e->x(),e->y());
+    if (e->x() > swidget->pos().x() && e->x() < swidget->pos().x() + swidget->width() && e->y() > 45 && e->y() < 45 + swidget->height()) {
+        swidget->manager->getInitPos(e->x(),e->y());
+    }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *e)
 {
-    if(e->buttons()&Qt::MiddleButton)
-    {
-        if(e->modifiers()==Qt::CTRL)
+    if (e->x() > swidget->pos().x() && e->x() < swidget->pos().x() + swidget->width() && e->y() > 45 && e->y() < 45 + swidget->height()) {
+        if(e->buttons()&Qt::RightButton)
         {
-            mwidget->manager->executeTranslateOperation(e->x(),e->y());
+            swidget->manager->executeRotateOperation(e->x(),e->y());
         }
-        else
+        if(e->buttons()&Qt::LeftButton)
         {
-            mwidget->manager->executeRotateOperation(e->x(),e->y());
+            swidget->manager->executeTranslateOperation(e->x(),e->y());
         }
+        swidget->updateGL();
+        messageINstatusbar();
     }
-    mwidget->updateGL();
 }
 
 void MainWindow::wheelEvent(QWheelEvent *e)
 {
-    if(e->delta()>=0)
-    {
-        mwidget->manager->executeScaleOperation(-0.1);
-    }else
-    {
-        mwidget->manager->executeScaleOperation(0.1);
+    if (e->x() > swidget->pos().x() && e->x() < swidget->pos().x() + swidget->width() && e->y() > 45 && e->y() < 45 + swidget->height()) {
+        if(e->delta()>=0)
+        {
+            swidget->manager->executeScaleOperation(-0.1);
+        }else
+        {
+            swidget->manager->executeScaleOperation(0.1);
+        }
+        swidget->updateGL();
+        messageINstatusbar();
     }
-    mwidget->updateGL();
-}*/
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key())
+    {
+    case Qt::Key_F1:
+        fullscreen = !fullscreen;
+        if (fullscreen)
+        {
+            showFullScreen(); // can not use key event now!
+        }
+        else
+        {
+            showNormal();
+        }
+        swidget->updateGL();
+        break;
+    case Qt::Key_Escape:
+        close();
+    }
+}
+
+void MainWindow::on_action_O_triggered()
+{
+    filename = QFileDialog::getOpenFileName(this, "Open An Object", QDir::currentPath(), "Object files(*.obj);;All files(*.*)");
+    if (!filename.isNull()) { //用户选择了文件
+        QFileInfo fileinfo = QFileInfo(filename);
+        file_name = fileinfo.fileName();
+        swidget->obj = new MYOBJECT(filename);
+    }
+    else { // 用户取消选择
+    }
+}
+
+void MainWindow::on_action_S_triggered()
+{
+    FileName = QFileDialog::getSaveFileName(this, "Save An Object", QDir::currentPath(), "Object files(*.obj);;All files(*.*)");
+    if (!FileName.isNull()){ //用户选择了文件
+        QFileInfo fileinfo = QFileInfo(filename);
+        File_Name = fileinfo.fileName();
+        QFile f(FileName);
+        f.open(QIODevice::WriteOnly | QIODevice::Text);
+        QTextStream txtOutput(&f);
+        for (int i = 0; i < swidget->obj->points.size(); i++) {
+            MYPOINT p = swidget->obj->points[i];
+            txtOutput << "v  " << p.px << " " << p.py << " " << p.pz << endl;
+        }
+        for (int i = 0; i < swidget->obj->faces.size(); i++) {
+            MYFACE f = swidget->obj->faces[i];
+            txtOutput << "f  " << f.pa + 1 << " " << f.pb + 1 << " " << f.pc + 1 << endl;
+        }
+        f.close();
+    }
+    else { // 用户取消选择
+    }
+}

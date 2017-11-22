@@ -18,9 +18,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    //void mousePressEvent(QMouseEvent *e);
-    //void mouseMoveEvent(QMouseEvent *e);
-    //void wheelEvent(QWheelEvent *e);
+    QString filename;
+    QString FileName;
+    QString file_name;
+    QString File_Name;
+    QLabel *msgLabel;
+    void messageINstatusbar();
+
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void wheelEvent(QWheelEvent *e);
+    void keyPressEvent(QKeyEvent *event);
 
     ShowGLWidget* swidget;
     ControlWidget* cwidget;
@@ -28,7 +36,14 @@ public:
     void toMoveControlPoint();
     void toShowControlPoint();
 
+private slots:
+    void on_action_O_triggered();
+
+    void on_action_S_triggered();
+
 private:
+    bool fullscreen;
+
     Ui::MainWindow *ui;
 };
 

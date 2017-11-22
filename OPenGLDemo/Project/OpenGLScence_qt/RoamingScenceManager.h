@@ -15,7 +15,7 @@ public:
     void executeScaleOperation(float factor);
     void executeTranslateOperation(int x,int y);
     void getInitPos(int x, int y);
-private:
+public:
     //辅助坐标系三根轴
     Vector3D *AuxX;
     Vector3D *AuxY;

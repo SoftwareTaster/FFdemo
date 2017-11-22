@@ -1,6 +1,7 @@
 #include "myobject.h"
 
 #include <QFile>
+#include <QDebug>
 #include <QTextStream>
 
 MYOBJECT::MYOBJECT()
@@ -9,9 +10,9 @@ MYOBJECT::MYOBJECT()
 
 MYOBJECT::MYOBJECT(const QString &objpath)
 {
-    QFile f("F:\\experiment\\qt\\Projects\\ComputerAnimatioonTwo\\ObjParseRight.txt");
-    f.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream txtOutput(&f);
+    //QFile f("F:\\experiment\\qt\\Projects\\ComputerAnimatioonTwo\\ObjParseRight.txt");
+    //f.open(QIODevice::WriteOnly | QIODevice::Text);
+    //QTextStream txtOutput(&f);
     QFile file(objpath);
     if (!file.open(QIODevice::ReadOnly)) {
         printf("open model goes wrong.");
@@ -33,7 +34,7 @@ MYOBJECT::MYOBJECT(const QString &objpath)
                 minPoint[i] = qMin(minPoint[i], p[i]);
                 maxPoint[i] = qMax(maxPoint[i], p[i]);
             }
-            txtOutput << p.px << "\t" << p.py << "\t" << p.pz << endl;
+            //txtOutput << p.px << "\t" << p.py << "\t" << p.pz << endl;
             points << p;
         } // point definition line
         else if (id == "f") {
@@ -46,13 +47,13 @@ MYOBJECT::MYOBJECT(const QString &objpath)
                 itmp--;
                 f[i] = itmp;
             }
-            txtOutput << f.pa << "\t" << f.pb << "\t" << f.pc << endl;
+            //txtOutput << f.pa << "\t" << f.pb << "\t" << f.pc << endl;
             faces << f;
             edges << MYEDGE(f[0], f[1]) << MYEDGE(f[1], f[2]) << MYEDGE(f[2], f[0]);
         }
     }
     file.close();
-    f.close();
+    //f.close();
 
     ffd = new FFD(minPoint, maxPoint);
     toNormalize(ffd->X0, ffd->S, ffd->T, ffd->U);

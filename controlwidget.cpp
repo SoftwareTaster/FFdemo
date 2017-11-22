@@ -72,36 +72,38 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
     layout0->addLayout(layout4);
 
     QHBoxLayout* layoutxyz = new QHBoxLayout;
-
-    sliderx = new QSlider(this);
-    sliderx->setObjectName("xSlider");
-    sliderx->setRange(-10, 10);
-    sliderx->setValue(0);
-    sliderx->setOrientation(Qt::Horizontal);
-    QLabel* labelx = new QLabel(this);
-    labelx->setText("x");
-    layoutxyz->addWidget(labelx);
-    layoutxyz->addWidget(sliderx);
-
-    slidery = new QSlider(this);
-    slidery->setObjectName("ySlider");
-    slidery->setRange(-10, 10);
-    slidery->setValue(0);
-    slidery->setOrientation(Qt::Horizontal);
-    QLabel* labely = new QLabel(this);
-    labely->setText("y");
-    layoutxyz->addWidget(labely);
-    layoutxyz->addWidget(slidery);
-
-    sliderz = new QSlider(this);
-    sliderz->setObjectName("zSlider");
-    sliderz->setRange(-10, 10);
-    sliderz->setValue(0);
-    sliderz->setOrientation(Qt::Horizontal);
-    QLabel* labelz = new QLabel(this);
-    labelz->setText("z");
-    layoutxyz->addWidget(labelz);
-    layoutxyz->addWidget(sliderz);
+        sliderx = new QSlider(this);
+        sliderx->setObjectName("xSlider");
+        sliderx->setRange(-10, 10);
+        sliderx->setValue(0);
+        sliderx->setOrientation(Qt::Horizontal);
+        sliderx->setTickPosition(QSlider::TicksAbove);
+        QLabel* labelx = new QLabel(this);
+        labelx->setText("x");
+        layoutxyz->addWidget(labelx);
+        layoutxyz->addWidget(sliderx);
+    layoutxyz->addSpacing(20);
+        slidery = new QSlider(this);
+        slidery->setObjectName("ySlider");
+        slidery->setRange(-10, 10);
+        slidery->setValue(0);
+        slidery->setOrientation(Qt::Horizontal);
+        slidery->setTickPosition(QSlider::TicksAbove);
+        QLabel* labely = new QLabel(this);
+        labely->setText("y");
+        layoutxyz->addWidget(labely);
+        layoutxyz->addWidget(slidery);
+    layoutxyz->addSpacing(20);
+        sliderz = new QSlider(this);
+        sliderz->setObjectName("zSlider");
+        sliderz->setRange(-10, 10);
+        sliderz->setValue(0);
+        sliderz->setOrientation(Qt::Horizontal);
+        sliderz->setTickPosition(QSlider::TicksAbove);
+        QLabel* labelz = new QLabel(this);
+        labelz->setText("z");
+        layoutxyz->addWidget(labelz);
+        layoutxyz->addWidget(sliderz);
 
     QVBoxLayout* superlayout = new QVBoxLayout;
     superlayout->addLayout(layout0);

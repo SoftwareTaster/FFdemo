@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "math.h"
 #include <QDir>
 #include <QDebug>
 #include <QFile>
@@ -8,6 +9,8 @@
 #include <QWheelEvent>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QTime>
+#include <QTimer>
 #include <OPenGLDemo/include/MathAPIKernel/Vector3D.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     fullscreen = false;
+    animaStart = false;
+
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::toPlayAnimaMore);
+    timer->start(5);
 
     QWidget* widget = new QWidget(this);
     setCentralWidget(widget);
@@ -28,9 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     layout->setStretchFactor(cwidget, 1);
     widget->setLayout(layout);
 
+    // move control points and other points when move sliders
     connect(cwidget->sliderx, &QSlider::sliderReleased, this, &MainWindow::toMoveControlPoint);
     connect(cwidget->slidery, &QSlider::sliderReleased, this, &MainWindow::toMoveControlPoint);
     connect(cwidget->sliderz, &QSlider::sliderReleased, this, &MainWindow::toMoveControlPoint);
+    // play animation when click play button
+    connect(cwidget->playButton, &QPushButton::clicked, this, &MainWindow::toPlayAnima);
+    // emphasize the points and buttons when being chosen
     for (int i = 0; i < 64; i++) {
         connect(cwidget->controlbutton[i], &QPushButton::clicked, this, &MainWindow::toShowControlPoint);
     }
@@ -106,6 +118,67 @@ void MainWindow::toMoveControlPoint()
 void MainWindow::toShowControlPoint()
 {
     swidget->updateGL();
+}
+
+void MainWindow::toPlayAnima()
+{
+    if (!swidget->obj) return; // make sure it works when obj is not loaded
+    animaStart = !animaStart;
+
+    if (animaStart) {
+        swidget->ShowFrame = false;
+    }
+    else {
+        swidget->ShowFrame = true;
+    }
+    swidget->updateGL();
+}
+
+void MainWindow::toPlayAnimaMore()
+{
+    if (animaStart) {
+        random_number_edge = makeRandomNumber();
+        switch (random_number_edge) {
+        case 0:
+            WhichMove(0, 0, 0);
+            break;
+        case 1:
+            WhichMove(0, 0, 3);
+            break;
+        case 2:
+            WhichMove(0, 3, 0);
+            break;
+        case 3:
+            WhichMove(0, 3, 3);
+            break;
+        case 4:
+            WhichMove(1, 0, 0);
+            break;
+        case 5:
+            WhichMove(1, 0, 3);
+            break;
+        case 6:
+            WhichMove(1, 3, 0);
+            break;
+        case 7:
+            WhichMove(1, 3, 3);
+            break;
+        case 8:
+            WhichMove(2, 0, 0);
+            break;
+        case 9:
+            WhichMove(2, 0, 3);
+            break;
+        case 10:
+            WhichMove(2, 3, 0);
+            break;
+        case 11:
+            WhichMove(2, 3, 3);
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *e)
@@ -199,5 +272,68 @@ void MainWindow::on_action_S_triggered()
         f.close();
     }
     else { // 用户取消选择
+    }
+}
+
+int MainWindow::makeRandomNumber()
+{
+    //qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    qsrand(time(NULL));
+    return qrand() % 12;
+}
+
+void MainWindow::WhichMove(int pos, int m, int n)
+{
+    int random = makeRandomNumber();
+    double Steps = 20, Step;
+    if (random % 2 == 0) Step = 1;
+    else Step = -1;
+    for (int i = 0; i < Steps; i++) {
+        switch (pos) {
+        case 1:
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[m][i][n].NowMove(Step);
+            }
+            break;
+        case 2:
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[m][n][i].NowMove(Step);
+            }
+            break;
+        default: // is 0
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[i][m][n].NowMove(Step);
+            }
+            break;
+        }
+
+        for (int i = 0; i < swidget->obj->points.size(); i++) {
+            swidget->obj->points[i] = swidget->obj->ffd->calculateBezier(swidget->obj->normalizedpoints[i]);
+        }
+        swidget->updateGL();
+    }
+    for (int i = 0; i < Steps; i++) {
+        switch (pos) {
+        case 1:
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[m][i][n].NowMove(-Step);
+            }
+            break;
+        case 2:
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[m][n][i].NowMove(-Step);
+            }
+            break;
+        default: // is 0
+            for (int i = 0; i < 4; i++) {
+                swidget->obj->ffd->controlpoints[i][m][n].NowMove(-Step);
+            }
+            break;
+        }
+
+        for (int i = 0; i < swidget->obj->points.size(); i++) {
+            swidget->obj->points[i] = swidget->obj->ffd->calculateBezier(swidget->obj->normalizedpoints[i]);
+        }
+        swidget->updateGL();
     }
 }

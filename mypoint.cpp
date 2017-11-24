@@ -52,3 +52,10 @@ MYPOINT MYPOINT::crossProduct(MYPOINT p)
 {
     return MYPOINT(py * p.pz - pz * p.py, pz * p.px - px * p.pz, px * p.py - py * p.px);
 }
+
+void MYPOINT::NowMove(double steps)
+{
+    px += steps;
+    py += steps;
+    pz += steps;
+}

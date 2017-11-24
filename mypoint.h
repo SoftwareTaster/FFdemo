@@ -17,6 +17,7 @@ public:
     const double &operator[](unsigned int index) const;
     double dotProduct(MYPOINT p);
     MYPOINT crossProduct(MYPOINT p);
+    void NowMove(double steps);
 };
 
 #endif // MYPOINT_H

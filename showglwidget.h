@@ -23,6 +23,7 @@ public:
     QString file_name;
     MYOBJECT* obj;
     MainWindow* ptr;
+    bool ShowFrame;
 
     RoamingScenceManager* manager;
 

@@ -35,6 +35,8 @@ public:
 
     void toMoveControlPoint();
     void toShowControlPoint();
+    void toPlayAnima();
+    void toPlayAnimaMore();
 
 private slots:
     void on_action_O_triggered();
@@ -43,6 +45,10 @@ private slots:
 
 private:
     bool fullscreen;
+    bool animaStart;
+    int random_number_edge; // from 0 to 11 means 12 edges of the frame
+    int makeRandomNumber();
+    void WhichMove(int pos, int m, int n);
 
     Ui::MainWindow *ui;
 };

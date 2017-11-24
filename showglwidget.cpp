@@ -21,6 +21,7 @@ ShowGLWidget::ShowGLWidget(QWidget* parent) : QGLWidget(parent)
     ptr = (MainWindow*)parentWidget();
     this->setFocusPolicy(Qt::StrongFocus);
     manager=new RoamingScenceManager();
+    ShowFrame = true;
 }
 
 ShowGLWidget::~ShowGLWidget()
@@ -41,7 +42,7 @@ void ShowGLWidget::initializeGL()
 void ShowGLWidget::paintGL()
 {
     manager->render();
-    if (!obj) return;
+    if (!obj) return; // make sure something is imported now
 
     //glLoadIdentity();
     //glTranslatef(0.0f, 0.0f, -250.0f);
@@ -70,24 +71,26 @@ void ShowGLWidget::paintGL()
         glEnd();
     }*/
 
-    for(int i = 0; i <= 3; i++) {
-        for (int j = 0; j <= 3; j++) {
-            for (int k = 0; k <= 3; k++) {
-                if (ptr->cwidget->buttonClicked[i * 16 + j * 4 + k]) {
-                    glPointSize(5.0f);
+    if (ShowFrame) {
+        for(int i = 0; i <= 3; i++) {
+            for (int j = 0; j <= 3; j++) {
+                for (int k = 0; k <= 3; k++) {
+                    if (ptr->cwidget->buttonClicked[i * 16 + j * 4 + k]) {
+                        glPointSize(5.0f);
+                    }
+                    else {
+                        glPointSize(2.0f);
+                    }
+                    glBegin(GL_POINTS);
+                        glColor3f(1.0f, 0.0f, 0.0f);
+                        glVertex3f(obj->ffd->controlpoints[i][j][k].px, obj->ffd->controlpoints[i][j][k].py, obj->ffd->controlpoints[i][j][k].pz);
+                    glEnd();
+                    qDebug() << "Why!";
                 }
-                else {
-                    glPointSize(2.0f);
-                }
-                glBegin(GL_POINTS);
-                    glColor3f(1.0f, 0.0f, 0.0f);
-                    glVertex3f(obj->ffd->controlpoints[i][j][k].px, obj->ffd->controlpoints[i][j][k].py, obj->ffd->controlpoints[i][j][k].pz);
-                glEnd();
-                qDebug() << "Why!";
             }
         }
+        DrawFrame();
     }
-    DrawFrame();
 }
 
 bool ShowGLWidget::counter(int i, int j, int k)

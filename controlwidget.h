@@ -14,6 +14,7 @@ public:
     explicit ControlWidget(QWidget *parent = nullptr);
 
     QPushButton* controlbutton[64];
+    QPushButton* playButton;
     bool buttonClicked[64];
     void addButton(QHBoxLayout* l, int n);
     void clickButton();

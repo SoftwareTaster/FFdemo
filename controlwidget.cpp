@@ -9,6 +9,7 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
         controlbutton[i] = new QPushButton(str, this);
         connect(controlbutton[i], &QPushButton::clicked, this, &ControlWidget::clickButton);
     }
+    playButton = new QPushButton("PLAY", this);
 
     QHBoxLayout* layout0 = new QHBoxLayout;
         QVBoxLayout* layout1 = new QVBoxLayout;
@@ -104,7 +105,9 @@ ControlWidget::ControlWidget(QWidget *parent) : QWidget(parent)
         labelz->setText("z");
         layoutxyz->addWidget(labelz);
         layoutxyz->addWidget(sliderz);
+    layoutxyz->addSpacing(20);
 
+    layoutxyz->addWidget(playButton);
     QVBoxLayout* superlayout = new QVBoxLayout;
     superlayout->addLayout(layout0);
     superlayout->addSpacing(20);
